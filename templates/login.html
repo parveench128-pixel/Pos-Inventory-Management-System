@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS & Inventory Management System - Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Login page specific styles */
+        body {
+            background-image: url("{{ url_for('static', filename='login_background.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 20px auto;
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(4px);
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, #3e58cf 0%);
+            color: #fff;
+            padding: 12px 15px;
+            text-align: center;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            font-size: 28px;
+        }
+
+        .login-header h1 {
+            margin: 4px 0;
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .login-form {
+            padding: 20px 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 17px;
+        }
+
+        .form-group input.form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 15px;
+            box-sizing: border-box;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group input.form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: transparent;
+            border: none;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #333;
+            line-height: 1;
+            padding: 0;
+        }
+
+        .close-btn:hover {
+            color: #667eea;
+        }
+
+        .error-message {
+            margin-bottom: 12px;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+            font-size: 14px;
+            pointer-events: none;
+        }
+
+        .form-group .input-wrapper input.form-control,
+        .form-group .password-wrapper input.form-control {
+            padding-left: 36px;
+        }
+
+        .form-group .password-wrapper input.form-control {
+            padding-right: 56px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 38px;
+            height: 38px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        .toggle-password:focus {
+            outline: 2px solid rgba(102, 126, 234, 0.18);
+            border-radius: 6px;
+        }
+
+        .toggle-password .eye {
+            width: 24px;
+            height: 24px;
+        }
+
+        .toggle-password .slash-base,
+        .toggle-password .slash-top {
+            visibility: hidden;
+        }
+
+        .toggle-password.slashed .slash-base,
+        .toggle-password.slashed .slash-top {
+            visibility: visible;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 8px;
+            cursor: pointer;
+            font-size: 17px;
+        }
+
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .remember-me {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: #333;
+            white-space: nowrap;
+            font-size: 16px;
+        }
+
+        .remember-me input {
+            margin: 0;
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+        }
+
+        .forgot-password-btn {
+            background: transparent;
+            border: none;
+            color: #3e58cf;
+            cursor: pointer;
+            padding: 0;
+            font-size: 14px;
+            text-decoration: underline;
+        }
+
+        .forgot-password-btn:hover {
+            color: #2f43a1;
+        }
+
+        .login-footer {
+            background: #f7f7f7;
+            text-align: center;
+            padding: 10px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        @media (max-width: 480px) {
+            .login-form {
+                padding: 20px;
+            }
+
+            .login-header {
+                padding: 15px 15px;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="logo"><i class="fa-solid fa-cart-shopping"></i></div>
+            <h1>POS & Inventory System</h1>
+            <p>Login to access the Pos System</p>
+        </div>
+        <div class="login-form">
+            {% if error %}
+            <div class="alert alert-danger error-message">{{ error }}</div>
+            {% endif %}
+
+            <form method="POST" action="{{ url_for('login') }}">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-user input-icon" aria-hidden="true"></i>
+                        <input type="text" id="username" name="username" class="form-control"
+                            placeholder="Enter your username" required autofocus>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-wrapper">
+                        <i class="fa-solid fa-key input-icon" aria-hidden="true"></i>
+                        <input type="password" id="password" name="password" class="form-control"
+                            placeholder="Enter your password" required>
+                        <button type="button" id="togglePassword" class="toggle-password"
+                            aria-label="Show or hide password">
+                            <svg class="eye" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
+                                focusable="false">
+                                <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z" fill="none" stroke="#666"
+                                    stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                                <circle cx="12" cy="12" r="3" fill="#666" />
+                                <path class="slash-base" d="M4.5 19.5 L19.5 4.5" stroke="#fff" stroke-width="4"
+                                    stroke-linecap="round" visibility="hidden" />
+                                <path class="slash-top" d="M4.5 19.5 L19.5 4.5" stroke="#333" stroke-width="1.8"
+                                    stroke-linecap="round" visibility="hidden" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="login-options">
+                    <label class="remember-me" for="remember">
+                        <input type="checkbox" id="remember" name="remember">
+                        <span>Remember me</span>
+                    </label>
+                    <button type="button" id="forgotPasswordBtn" class="forgot-password-btn">Forgot Password?</button>
+                </div>
+
+                <button type="submit" class="login-btn btn btn-primary">Login</button>
+                <div style="margin-top: 14px; text-align: center; color: #3f5878;">
+                    <p style="margin: 0 0 0 0; font-size: 16px; font-weight: 700;">Demo Credentials:</p>
+                    <p style="margin: 0; font-size: 14px;">Admin: admin / admin123</p>
+                    <p style="margin: 0; font-size: 14px;">Manager: manager / manager123</p>
+                    <p style="margin: 0; font-size: 14px;">Cashier: cashier / cashier123</p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Password visibility toggle: unslashed = hidden, slashed = visible
+        const togglePassword = document.getElementById('togglePassword');
+        if (togglePassword) {
+            togglePassword.addEventListener('click', function () {
+                const pwd = document.getElementById('password');
+                if (!pwd) return;
+                if (pwd.type === 'password') {
+                    // currently hidden -> make visible, add slash
+                    pwd.type = 'text';
+                    togglePassword.classList.add('slashed');
+                } else {
+                    // currently visible -> hide, remove slash
+                    pwd.type = 'password';
+                    togglePassword.classList.remove('slashed');
+                }
+                pwd.focus();
+            });
+        }
+
+        const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
+        if (forgotPasswordBtn) {
+            forgotPasswordBtn.addEventListener('click', function () {
+                confirm("Password change disabled. Please contact your system administrator.");
+            });
+        }
+
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function (e) {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            if (!username || !password) {
+                e.preventDefault();
+                alert('Please fill in all fields');
+            }
+        });
+    </script>
+</body>
+
+</html>

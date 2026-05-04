@@ -1,0 +1,847 @@
+/* ===== GLOBAL STYLES ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
+}
+
+/* ===== TEXT & TYPOGRAPHY ===== */
+h1 {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+p {
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+/* ===== LINKS ===== */
+a {
+    color: #667eea;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: #764ba2;
+}
+
+/* ===== BUTTONS ===== */
+button {
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #3e58cf 0%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-primary:hover {
+
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.btn-secondary {
+    background: #e0e0e0;
+    color: #333;
+}
+
+.btn-secondary:hover {
+    background: #d0d0d0;
+}
+
+.btn-danger {
+    background: #f44336;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #da190b;
+}
+
+.btn-warning {
+    background: #ff9800;
+    color: white;
+}
+
+.btn-warning:hover {
+    background: #e68900;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.btn-large {
+    padding: 12px 24px;
+    font-size: 16px;
+}
+
+/* ===== FORMS ===== */
+input,
+select,
+textarea {
+    font-family: inherit;
+    font-size: 14px;
+}
+
+input,
+select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    transition: all 0.3s;
+    width: 100%;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    resize: vertical;
+    min-height: 100px;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+/* ===== TABLES ===== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+thead {
+    background: #f9f9f9;
+}
+
+thead th {
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid #e0e0e0;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: #666;
+}
+
+tbody td {
+    padding: 12px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+tbody tr:hover {
+    background: #f9f9f9;
+}
+
+/* ===== CARDS & PANELS ===== */
+.card,
+.panel {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.card-header,
+.panel-header {
+    background: white;
+    padding: 15px;
+    border-bottom: 2px solid #f0f0f0;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-body,
+.panel-body {
+    padding: 15px;
+}
+
+.card-footer,
+.panel-footer {
+    background: #f9f9f9;
+    padding: 15px;
+    border-top: 1px solid #e0e0e0;
+}
+
+/* ===== ALERTS ===== */
+.alert {
+    padding: 12px 15px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    border-left: 4px solid;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.alert-success {
+    background: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+}
+
+.alert-warning {
+    background: #fff3cd;
+    color: #856404;
+    border-color: #ffeaa7;
+}
+
+.alert-danger {
+    background: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+}
+
+.alert-info {
+    background: #d1ecf1;
+    color: #0c5460;
+    border-color: #bee5eb;
+}
+
+/* ===== BADGES ===== */
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.badge-success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.badge-warning {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.badge-danger {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.badge-info {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+/* ===== MODALS ===== */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 200;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.active {
+    display: flex;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 15px;
+}
+
+.modal-header h3 {
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+    transition: color 0.3s;
+}
+
+.modal-close:hover {
+    color: #333;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 25px;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 15px;
+}
+
+/* ===== SCROLLBAR STYLING ===== */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* ===== SELECTION STYLING ===== */
+::selection {
+    background: rgba(102, 126, 234, 0.3);
+    color: #333;
+}
+
+/* ===== UTILITY CLASSES ===== */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-muted {
+    color: #999;
+}
+
+.mt-5 {
+    margin-top: 5px;
+}
+
+.mt-10 {
+    margin-top: 10px;
+}
+
+.mt-15 {
+    margin-top: 15px;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}
+
+.mb-5 {
+    margin-bottom: 5px;
+}
+
+.mb-10 {
+    margin-bottom: 10px;
+}
+
+.mb-15 {
+    margin-bottom: 15px;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+.p-10 {
+    padding: 10px;
+}
+
+.p-15 {
+    padding: 15px;
+}
+
+.p-20 {
+    padding: 20px;
+}
+
+/* ===== SHADOWS ===== */
+.shadow-sm {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.shadow-md {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.shadow-lg {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== LOADING SPINNER ===== */
+.spinner {
+    border: 4px solid #f1f1f1;
+    border-top: 4px solid #667eea;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* ===== PAGINATION ===== */
+.pagination {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.pagination a,
+.pagination span {
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.pagination a:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+.pagination .active {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1024px) {
+    .container {
+        padding: 0 15px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 10px;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    thead th {
+        padding: 8px;
+        font-size: 11px;
+    }
+
+    tbody td {
+        padding: 8px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    .modal-content {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 5px;
+    }
+
+    h1 {
+        font-size: 18px;
+    }
+
+    h2 {
+        font-size: 16px;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    .modal-footer {
+        flex-direction: column;
+    }
+
+    .modal-footer button {
+        width: 100%;
+    }
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+
+    .navbar,
+    .logout-btn,
+    .btn-primary,
+    .btn-secondary,
+    .modal {
+        display: none;
+    }
+
+    body {
+        background: white;
+    }
+
+    .card,
+    .panel {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+}
+
+/* ===== SHARED DASHBOARD/MANAGER SHELL ===== */
+body.dashboard-shell,
+body.manager-shell {
+    overflow: hidden;
+}
+
+body.dashboard-shell .navbar,
+body.manager-shell .navbar {
+   
+    height: 60px;
+    display: flex;
+    align-items: center;
+    color: rgb(33,37,41);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    top: 0;
+    z-index: 100;
+}
+
+body.dashboard-shell .navbar-right,
+body.manager-shell .navbar-right {
+    order: 3;
+    display: flex;
+    align-items: center;
+    padding-right: 20px;
+    flex-shrink: 0;
+    width: 250px;
+    justify-content: flex-end;
+}
+
+body.dashboard-shell .navbar-logout-btn,
+body.manager-shell .navbar-logout-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: oklch(57.7% 0.245 27.325);
+    color: rgb(255, 255, 255);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 9px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s;
+    white-space: nowrap;
+    line-height: 1;
+}
+
+body.dashboard-shell .navbar-logout-btn i,
+body.manager-shell .navbar-logout-btn i {
+    font-size: 14px;
+    line-height: 1;
+    vertical-align: middle;
+    position: relative;
+    top: -0.5px;
+}
+
+ body.dashboard-shell .navbar-logout-btn:hover,
+body.manager-shell .navbar-logout-btn:hover {
+     background: oklch(50.5% 0.213 27.518);
+    
+} 
+
+body.dashboard-shell .navbar::after,
+body.manager-shell .navbar::after {
+    content: "";
+    flex-shrink: 0;
+}
+
+body.dashboard-shell .navbar-title,
+body.manager-shell .navbar-title {
+    order: 2;
+    flex: 1;
+    font-size: 25px;
+    font-weight: 600;
+    text-align: center;
+    padding: 0 20px;
+    padding-right: 250px;
+}
+
+body.dashboard-shell .navbar-left,
+body.manager-shell .navbar-left {
+    order: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    width: 250px;
+    height: 100%;
+    background: #2B2D3D;
+    color: white;
+    flex-shrink: 0;
+}
+
+body.dashboard-shell .user-info,
+body.manager-shell .user-info {
+    font-size: 16px;
+}
+
+body.dashboard-shell .logout-btn,
+body.manager-shell .logout-btn {
+    color: rgb(0, 0, 0);
+    padding: 25px 15px;
+    
+    text-decoration: none;
+}
+
+body.dashboard-shell .container,
+body.manager-shell .container {
+    display: flex;
+    height: calc(100vh - 70px);
+    max-width: none;
+    margin: 0;
+    padding: 0;
+}
+
+body.dashboard-shell .sidebar,
+body.manager-shell .sidebar {
+    width: 250px;
+    background: #2B2D3D;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    flex-shrink: 0;
+}
+
+body.dashboard-shell .sidebar a,
+body.manager-shell .sidebar a {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    color: white;
+    text-decoration: none;
+    padding: 15px 25px;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+body.dashboard-shell .sidebar a:hover,
+body.manager-shell .sidebar a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    
+}
+
+body.dashboard-shell .sidebar a.active,
+body.manager-shell .sidebar a.active {
+    background: rgba(255, 255, 255, 0.3);
+    font-weight: 600;
+}
+
+body.dashboard-shell .main-content,
+body.manager-shell .main-content {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: #f3f4f7;
+}
+
+body.dashboard-shell .main-content .panel,
+body.dashboard-shell .main-content .stat-card,
+body.manager-shell .main-content .panel,
+body.manager-shell .main-content .stat-card {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+body.dashboard-shell .sidebar-toggle,
+body.manager-shell .sidebar-toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 6px;
+}
+
+body.dashboard-shell .dashboard-header,
+body.manager-shell .dashboard-header {
+    margin-bottom: 30px;
+}
+
+body.dashboard-shell .dashboard-header h1,
+body.manager-shell .dashboard-header h1 {
+    font-size: 28px;
+    font-weight: 600;
+}

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Account - POS & Inventory</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+            background: #f1f3f6;
+            color: #222;
+        }
+
+        .page {
+            max-width: 1180px;
+            margin: 18px auto;
+            border: 1px solid #1f4f93;
+            background: #fff;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .page-title {
+            background: #0f4c97;
+            color: #fff;
+            text-align: center;
+            padding: 10px 16px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+        }
+
+        .content {
+            padding: 16px;
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .left-tools,
+        .right-tools {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: 1px solid #c9ced8;
+            background: #f7f8fb;
+            color: #111;
+            border-radius: 3px;
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #e9eef8;
+        }
+
+        .btn-danger {
+            background: #ffe8e8;
+            border-color: #f4c7c7;
+        }
+
+        .btn-primary {
+            background: #e7f0ff;
+            border-color: #bfd4ff;
+        }
+
+        .users-table-wrap {
+            border: 1px solid #c4cbda;
+            min-height: 280px;
+            overflow: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            background: #0f4c97;
+            color: #fff;
+            text-align: left;
+            font-size: 14px;
+            padding: 8px 10px;
+            border-right: 1px solid #2b65ad;
+            white-space: nowrap;
+        }
+
+        tbody td {
+            border-top: 1px solid #d5d9e2;
+            border-right: 1px solid #e5e9f0;
+            padding: 8px 10px;
+            font-size: 14px;
+        }
+
+        tbody tr {
+            cursor: pointer;
+        }
+
+        tbody tr:hover {
+            background: #f4f8ff;
+        }
+
+        tbody tr.selected {
+            background: #ddeafd;
+        }
+
+        .password-panel {
+            margin-top: 16px;
+            border: 1px solid #d8dde8;
+            padding: 14px;
+        }
+
+        .password-title {
+            margin: 0 0 8px 0;
+            color: #3e4f6b;
+            font-size: 15px;
+        }
+
+        .password-body {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .password-help {
+            color: #4f5f7d;
+            font-size: 14px;
+        }
+
+        .status-line {
+            margin-top: 12px;
+            color: #0f4c97;
+            font-size: 14px;
+            min-height: 20px;
+        }
+
+        .actions-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: #0f4c97;
+            font-size: 14px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-card {
+            width: min(680px, 100%);
+            background: #fff;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-head {
+            background: #0f4c97;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 14px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            border: none;
+            background: transparent;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 14px;
+        }
+
+        .create-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .create-grid .full-row {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 13px;
+            color: #263650;
+        }
+
+        input,
+        select {
+            width: 100%;
+            border: 1px solid #ccd3df;
+            border-radius: 4px;
+            padding: 9px 10px;
+            font-size: 14px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        @media (max-width: 760px) {
+            .create-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <div class="page-title">User Account</div>
+        <div class="content">
+            <div class="toolbar">
+                <div class="left-tools">
+                    <button class="btn btn-primary" type="button" onclick="openCreateModal()">Create Account</button>
+                    <button class="btn" type="button" onclick="changePassword()">Change Password</button>
+                    <button class="btn" type="button" onclick="toggleAccount()">Activate / UnActivate Account</button>
+                </div>
+                <div class="right-tools">
+                    <a class="back-link" href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+                </div>
+            </div>
+
+            <div class="users-table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">No</th>
+                            <th>User Name</th>
+                            <th>Full Name</th>
+                            <th style="width: 170px;">Account Activate</th>
+                            <th style="width: 130px;">Role</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <tr>
+                            <td colspan="5">Loading users...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="actions-row">
+                <button class="btn btn-danger" type="button" onclick="removeUser()">Remove</button>
+                <button class="btn" type="button" onclick="showProperties()">Properties</button>
+            </div>
+
+            <div class="password-panel">
+                <h3 class="password-title" id="passwordTitle">Password Panel</h3>
+                <div class="password-body">
+                    <div class="password-help" id="passwordHelp">Select any user to reset password.</div>
+                    <button class="btn btn-primary" type="button" onclick="resetPassword()">Reset Password</button>
+                </div>
+            </div>
+
+            <div class="status-line" id="statusLine"></div>
+        </div>
+    </div>
+
+    <div id="createModal" class="modal">
+        <div class="modal-card">
+            <div class="modal-head">
+                <span>Create Account</span>
+                <button class="modal-close" onclick="closeCreateModal()" aria-label="Close">x</button>
+            </div>
+            <div class="modal-body">
+                <form id="createForm" onsubmit="createAccount(event)">
+                    <div class="create-grid">
+                        <div>
+                            <label for="newUserName">User Name *</label>
+                            <input id="newUserName" required>
+                        </div>
+                        <div>
+                            <label for="newPassword">Password *</label>
+                            <input id="newPassword" type="password" required>
+                        </div>
+                        <div>
+                            <label for="newRole">Role *</label>
+                            <select id="newRole" required>
+                                <option value="">Select Role</option>
+                                <option value="admin">Admin</option>
+                                <option value="manager">Manager</option>
+                                <option value="cashier">Cashier</option>
+                            </select>
+                        </div>
+                        <div class="full-row">
+                            <label for="newFullName">Full Name (Optional)</label>
+                            <input id="newFullName" placeholder="e.g. Ali Raza">
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn" type="button" onclick="closeCreateModal()">Cancel</button>
+                        <button class="btn btn-primary" type="submit">Create Account</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const apiBase = '/api/users';
+        let selectedUserId = null;
+        let users = [];
+
+        function setStatus(message, isError = false) {
+            const line = document.getElementById('statusLine');
+            line.textContent = message;
+            line.style.color = isError ? '#b42318' : '#0f4c97';
+        }
+
+        function normalizeRole(role) {
+            if (!role) return '';
+            return role.charAt(0).toUpperCase() + role.slice(1);
+        }
+
+        function findSelectedUser() {
+            return users.find(u => u.id === selectedUserId) || null;
+        }
+
+        function updatePasswordPanel() {
+            const title = document.getElementById('passwordTitle');
+            const help = document.getElementById('passwordHelp');
+            const user = findSelectedUser();
+            if (!user) {
+                title.textContent = 'Password Panel';
+                help.textContent = 'Select any user to reset password.';
+                return;
+            }
+            title.textContent = `Password For ${user.username}`;
+            help.textContent = `To change the password for ${user.username}, click Reset Password.`;
+        }
+
+        function renderUsers() {
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = '';
+
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5">No users found.</td></tr>';
+                return;
+            }
+
+            users.forEach((user, index) => {
+                const row = document.createElement('tr');
+                if (user.id === selectedUserId) {
+                    row.classList.add('selected');
+                }
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${user.username}</td>
+                    <td>${user.full_name || '-'}</td>
+                    <td>${user.active ? 'True' : 'False'}</td>
+                    <td>${normalizeRole(user.role)}</td>
+                `;
+                row.addEventListener('click', () => {
+                    selectedUserId = user.id;
+                    renderUsers();
+                    updatePasswordPanel();
+                    setStatus(`Selected user: ${user.username}`);
+                });
+                tbody.appendChild(row);
+            });
+        }
+
+        async function loadUsers() {
+            try {
+                const response = await fetch(apiBase);
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to load users');
+                }
+                users = data;
+                if (selectedUserId && !findSelectedUser()) {
+                    selectedUserId = null;
+                }
+                renderUsers();
+                updatePasswordPanel();
+            } catch (error) {
+                setStatus(error.message, true);
+                document.getElementById('usersTableBody').innerHTML = '<tr><td colspan="5">Failed to load users.</td></tr>';
+            }
+        }
+
+        function requireSelectedUser() {
+            const user = findSelectedUser();
+            if (!user) {
+                alert('Please select a user first.');
+                return null;
+            }
+            return user;
+        }
+
+        function openCreateModal() {
+            document.getElementById('createForm').reset();
+            document.getElementById('createModal').classList.add('active');
+        }
+
+        function closeCreateModal() {
+            document.getElementById('createModal').classList.remove('active');
+        }
+
+        async function createAccount(event) {
+            event.preventDefault();
+            const payload = {
+                username: document.getElementById('newUserName').value.trim(),
+                password: document.getElementById('newPassword').value,
+                role: document.getElementById('newRole').value,
+                full_name: document.getElementById('newFullName').value.trim()
+            };
+
+            try {
+                const response = await fetch(apiBase, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.error || 'Could not create account');
+                }
+                closeCreateModal();
+                setStatus(`Account created for ${data.username}.`);
+                await loadUsers();
+            } catch (error) {
+                alert(error.message);
+                setStatus(error.message, true);
+            }
+        }
+
+        async function changePassword() {
+            const user = requireSelectedUser();
+            if (!user) return;
+
+            const password = prompt(`Enter new password for ${user.username}:`);
+            if (!password) return;
+            await updateUser(user.id, { password }, `Password changed for ${user.username}.`);
+        }
+
+        async function resetPassword() {
+            const user = requireSelectedUser();
+            if (!user) return;
+
+            const password = prompt(`Reset password for ${user.username}:`);
+            if (!password) return;
+            await updateUser(user.id, { password }, `Password reset for ${user.username}.`);
+        }
+
+        async function toggleAccount() {
+            const user = requireSelectedUser();
+            if (!user) return;
+
+            const nextState = !user.active;
+            const confirmed = confirm(`Do you want to ${nextState ? 'activate' : 'deactivate'} ${user.username}?`);
+            if (!confirmed) return;
+
+            await updateUser(user.id, { active: nextState }, `${user.username} is now ${nextState ? 'active' : 'inactive'}.`);
+        }
+
+        async function removeUser() {
+            const user = requireSelectedUser();
+            if (!user) return;
+
+            if (!confirm(`Remove account for ${user.username}?`)) return;
+
+            try {
+                const response = await fetch(`${apiBase}/${user.id}`, { method: 'DELETE' });
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.error || 'Could not remove user');
+                }
+                selectedUserId = null;
+                setStatus(`Removed account: ${user.username}`);
+                await loadUsers();
+            } catch (error) {
+                alert(error.message);
+                setStatus(error.message, true);
+            }
+        }
+
+        function showProperties() {
+            const user = requireSelectedUser();
+            if (!user) return;
+
+            alert(
+                `No: ${users.findIndex(u => u.id === user.id) + 1}
+` +
+                `Username: ${user.username}
+` +
+                `Full Name: ${user.full_name || '-'}
+` +
+                `Role: ${normalizeRole(user.role)}
+` +
+                `Account Active: ${user.active ? 'True' : 'False'}`
+            );
+        }
+
+        async function updateUser(userId, payload, successMessage) {
+            try {
+                const response = await fetch(`${apiBase}/${userId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.error || 'Update failed');
+                }
+                setStatus(successMessage);
+                await loadUsers();
+            } catch (error) {
+                alert(error.message);
+                setStatus(error.message, true);
+            }
+        }
+
+        window.addEventListener('click', (event) => {
+            const modal = document.getElementById('createModal');
+            if (event.target === modal) {
+                closeCreateModal();
+            }
+        });
+
+        loadUsers();
+    </script>
+
+</body>
+
+</html>
