@@ -470,6 +470,7 @@
                 height: auto;
                 min-height: 110px;
                 z-index: 200;
+
             }
 
             .navbar::after {
@@ -557,12 +558,14 @@
             </button>
             <div class="user-info"><i class="fa-solid fa-user"></i> Welcome, {{ username }}</div>
         </div>
-        <div class="navbar-title" style="display:flex; align-items:center; gap:10px;">
-            <img src="{{ url_for('static', filename='logo.png') }}" alt="POS Logo" style="height: 80px; width: auto; object-fit: contain;">
-            POS and Inventory Management System
+        <div class="navbar-title" style="display:flex; align-items:center; gap:6px;">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="POS Logo"
+                style="height: 60px; width: 70px; object-fit: contain;">
+            Point of Sales System
         </div>
         <div class="navbar-right">
-            <a href="{{ url_for('logout') }}" class="navbar-logout-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
+            <a href="{{ url_for('logout') }}" class="navbar-logout-btn"><i
+                    class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
         </div>
     </div>
 
@@ -708,14 +711,16 @@
                                     style="background:#f0f4ff; border-radius:10px; padding:20px; text-align:center; border-left:4px solid #3e58cf;">
                                     <div
                                         style="font-size:12px; color:#667085; font-weight:600; text-transform:uppercase; margin-bottom:8px;">
-                                        <i class="fa-solid fa-dollar-sign"></i> Total Revenue</div>
+                                        <i class="fa-solid fa-dollar-sign"></i> Total Revenue
+                                    </div>
                                     <div id="mdRevenue" style="font-size:30px; font-weight:700; color:#3e58cf;">$0</div>
                                 </div>
                                 <div
                                     style="background:#f0fff4; border-radius:10px; padding:20px; text-align:center; border-left:4px solid #22c55e;">
                                     <div
                                         style="font-size:12px; color:#667085; font-weight:600; text-transform:uppercase; margin-bottom:8px;">
-                                        <i class="fa-solid fa-receipt"></i> Transactions</div>
+                                        <i class="fa-solid fa-receipt"></i> Transactions
+                                    </div>
                                     <div id="mdTransactions" style="font-size:30px; font-weight:700; color:#22c55e;">0
                                     </div>
                                 </div>
@@ -723,20 +728,22 @@
                                     style="background:#fff7ed; border-radius:10px; padding:20px; text-align:center; border-left:4px solid #f97316;">
                                     <div
                                         style="font-size:12px; color:#667085; font-weight:600; text-transform:uppercase; margin-bottom:8px;">
-                                        <i class="fa-solid fa-calculator"></i> Avg per Sale</div>
+                                        <i class="fa-solid fa-calculator"></i> Avg per Sale
+                                    </div>
                                     <div id="mdAvg" style="font-size:30px; font-weight:700; color:#f97316;">$0</div>
                                 </div>
                             </div>
                             <!-- Charts side by side for single month -->
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
-                                <div
+                            <div id="mdDetailChartGrid"
+                                style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
+                                <div id="mdRevenueChartCard"
                                     style="background:#fafafa; border-radius:10px; padding:16px; border:1px solid #eee;">
                                     <h3 style="font-size:15px; margin-bottom:4px; color:#333;"><i
                                             class="fa-solid fa-chart-line"></i> Revenue vs Annual Avg</h3>
                                     <canvas id="mdRevenueChart"
                                         style="width:100%; height:180px; display:block;"></canvas>
                                 </div>
-                                <div
+                                <div id="mdTxnChartCard"
                                     style="background:#fafafa; border-radius:10px; padding:16px; border:1px solid #eee;">
                                     <h3 style="font-size:15px; margin-bottom:4px; color:#333;"><i
                                             class="fa-solid fa-chart-bar"></i> Transactions vs Annual Avg</h3>
@@ -744,7 +751,8 @@
                                 </div>
                             </div>
                             <!-- Additional stats -->
-                            <div style="background:#f9f9f9; border-radius:10px; padding:16px; border:1px solid #eee;">
+                            <div id="mdAnnualComparison"
+                                style="background:#f9f9f9; border-radius:10px; padding:16px; border:1px solid #eee;">
                                 <h3 style="font-size:15px; margin-bottom:12px; color:#333;"><i
                                         class="fa-solid fa-chart-pie"></i> Annual Comparison</h3>
                                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
@@ -770,7 +778,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div
+                            <div id="mdTransactionListSection"
                                 style="margin-top:18px; background:#fff; border-radius:10px; padding:16px; border:1px solid #eee;">
                                 <h3 style="font-size:15px; margin-bottom:12px; color:#333;"><i
                                         class="fa-solid fa-list"></i> Transactions in <span
@@ -998,7 +1006,7 @@
                     <div class="form-group"><label>Password *</label><input type="text" id="manageUserPassword"
                             required>
                     </div>
-                    
+
                     <div class="modal-footer">
                         <button type="button" class="btn-cancel" onclick="closeUserModal()">Cancel</button>
                         <button type="submit" class="btn-primary">Create</button>
@@ -1134,6 +1142,57 @@
             }
 
             let _revenueChartState = null;
+            let _barChartHoverIdx = -1;
+
+            function drawSalesVolumeChartWithHighlight(labels, values, highlightIdx) {
+                const canvas = document.getElementById('salesVolumeChart');
+                const sized = resizeCanvas(canvas);
+                if (!sized) return;
+                const { ctx, width, height } = sized;
+                const rawMax = Math.max(...values, 0);
+                const minimumScaleMax = 300;
+                const roundedScaleMax = Math.ceil(Math.max(rawMax, minimumScaleMax) / 50) * 50;
+                const padLeft = 44, padRight = 16, padTop = 16, padBottom = 34;
+                const chartWidth = width - padLeft - padRight;
+                const chartHeight = height - padTop - padBottom;
+                if (values.length === 0) return;
+                const tickStep = roundedScaleMax >= 500 ? 100 : 50;
+                const tickCount = Math.floor(roundedScaleMax / tickStep);
+                ctx.clearRect(0, 0, width, height);
+                ctx.strokeStyle = '#d5d8df'; ctx.lineWidth = 1;
+                ctx.font = '12px Segoe UI, Arial, sans-serif'; ctx.fillStyle = '#5b6472';
+                for (let i = 0; i <= tickCount; i++) {
+                    const value = i * tickStep;
+                    const y = padTop + chartHeight - ((value / roundedScaleMax) * chartHeight);
+                    ctx.beginPath(); ctx.moveTo(padLeft, y); ctx.lineTo(width - padRight, y); ctx.stroke();
+                    ctx.fillText(String(value), 6, y + 4);
+                }
+                ctx.strokeStyle = '#7f8793';
+                ctx.beginPath(); ctx.moveTo(padLeft, padTop); ctx.lineTo(padLeft, height - padBottom); ctx.lineTo(width - padRight, height - padBottom); ctx.stroke();
+                if (labels.length > 0) {
+                    const stepX = labels.length > 1 ? chartWidth / (labels.length - 1) : chartWidth;
+                    for (let i = 0; i < labels.length; i++) {
+                        const x = padLeft + (stepX * i);
+                        ctx.fillText(labels[i], x - 10, height - 10);
+                    }
+                }
+                const slotWidth = chartWidth / values.length;
+                const barWidth = Math.max(8, slotWidth * 0.68);
+                const baseY = padTop + chartHeight;
+                // Draw highlight column background
+                if (highlightIdx >= 0 && highlightIdx < values.length) {
+                    const hx = padLeft + slotWidth * highlightIdx;
+                    ctx.fillStyle = 'rgba(62,88,207,0.08)';
+                    ctx.fillRect(hx, padTop, slotWidth, chartHeight);
+                }
+                values.forEach((value, index) => {
+                    const barHeight = (value / roundedScaleMax) * chartHeight;
+                    const x = padLeft + slotWidth * index + ((slotWidth - barWidth) / 2);
+                    const y = baseY - barHeight;
+                    ctx.fillStyle = index === highlightIdx ? '#3e58cf' : '#111';
+                    ctx.fillRect(x, y, barWidth, barHeight);
+                });
+            }
 
             function _drawRevenueLineOnly(ctx, s) {
                 const { padLeft, padTop, chartWidth, chartHeight, stepX, values, maxValue } = s;
@@ -1342,11 +1401,13 @@
 
                 if (isLine) {
                     document.getElementById('tooltipRevenue').textContent = '$' + revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                    revRow.style.display = 'flex';
-                    txnRow.style.display = 'none';
-                } else {
                     document.getElementById('tooltipTxn').textContent = txn.toLocaleString() + ' sales';
-                    revRow.style.display = 'none';
+                    revRow.style.display = 'flex';
+                    txnRow.style.display = 'flex';
+                } else {
+                    document.getElementById('tooltipRevenue').textContent = '$' + revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    document.getElementById('tooltipTxn').textContent = txn.toLocaleString() + ' sales';
+                    revRow.style.display = 'flex';
                     txnRow.style.display = 'flex';
                 }
 
@@ -1436,27 +1497,16 @@
                         showInterpolatedTooltip(interpValue, label, e.clientX, e.clientY);
                         drawRevenueCrosshair(px);
                     } else {
-                        // Bar chart: only inside bar
-                        const values = monthlySummary.transactions;
-                        const rawMax = Math.max(...values, 0);
-                        const roundedScaleMax = Math.ceil(Math.max(rawMax, 300) / 50) * 50;
+                        // Bar chart: hover anywhere in the column slot
                         const slotWidth = chartWidth / n;
-                        const barWidth = Math.max(8, slotWidth * 0.68);
-                        const baseY = padTop + chartHeight;
-                        let hitIdx = -1;
-                        for (let i = 0; i < n; i++) {
-                            const barHeight = (values[i] / roundedScaleMax) * chartHeight;
-                            const bx = padLeft + slotWidth * i + ((slotWidth - barWidth) / 2);
-                            const by = baseY - barHeight;
-                            if (px >= bx && px <= bx + barWidth && py >= by && py <= baseY) { hitIdx = i; break; }
+                        const idx = Math.floor((px - padLeft) / slotWidth);
+                        const hitIdx = Math.min(Math.max(idx, 0), n - 1);
+                        canvas.style.cursor = 'pointer';
+                        if (_barChartHoverIdx !== hitIdx) {
+                            _barChartHoverIdx = hitIdx;
+                            drawSalesVolumeChartWithHighlight(monthlySummary.labels, monthlySummary.transactions, hitIdx);
                         }
-                        if (hitIdx >= 0) {
-                            canvas.style.cursor = 'pointer';
-                            showTooltip(hitIdx, e.clientX, e.clientY, false);
-                        } else {
-                            canvas.style.cursor = 'default';
-                            hideTooltip();
-                        }
+                        showTooltip(hitIdx, e.clientX, e.clientY, false);
                     }
                 });
 
@@ -1464,6 +1514,10 @@
                     canvas.style.cursor = 'default';
                     hideTooltip();
                     if (isLine) clearRevenueCrosshair();
+                    else {
+                        _barChartHoverIdx = -1;
+                        drawSalesVolumeChartWithHighlight(monthlySummary.labels, monthlySummary.transactions, -1);
+                    }
                 });
 
                 canvas.addEventListener('click', function (e) {
@@ -1486,24 +1540,46 @@
                         const stepX = n > 1 ? chartWidth / (n - 1) : chartWidth;
                         hitIdx = Math.min(Math.max(Math.round((px - padLeft) / stepX), 0), n - 1);
                     } else {
-                        const values = monthlySummary.transactions;
-                        const rawMax = Math.max(...values, 0);
-                        const roundedScaleMax = Math.ceil(Math.max(rawMax, 300) / 50) * 50;
                         const slotWidth = chartWidth / n;
-                        const barWidth = Math.max(8, slotWidth * 0.68);
-                        const baseY = padTop + chartHeight;
-                        for (let i = 0; i < n; i++) {
-                            const barHeight = (values[i] / roundedScaleMax) * chartHeight;
-                            const bx = padLeft + slotWidth * i + ((slotWidth - barWidth) / 2);
-                            const by = baseY - barHeight;
-                            if (px >= bx && px <= bx + barWidth && py >= by && py <= baseY) { hitIdx = i; break; }
-                        }
+                        const idx = Math.floor((px - padLeft) / slotWidth);
+                        hitIdx = Math.min(Math.max(idx, 0), n - 1);
                     }
-                    if (hitIdx >= 0) openFullDetail(hitIdx);
+                    if (hitIdx >= 0) openFullDetail(hitIdx, isLine ? 'revenue' : 'transactions');
                 });
             }
 
-            function openFullDetail(idx) {
+            function setMonthDetailMode(mode, label, monthKey) {
+                const isRevenueMode = mode === 'revenue';
+                const revenueChartCard = document.getElementById('mdRevenueChartCard');
+                const txnChartCard = document.getElementById('mdTxnChartCard');
+                const detailChartGrid = document.getElementById('mdDetailChartGrid');
+                const transactionListSection = document.getElementById('mdTransactionListSection');
+                const transactionBody = document.getElementById('mdTransactionsBody');
+                const transactionLabel = document.getElementById('mdMonthTransactionsLabel');
+
+                if (detailChartGrid) detailChartGrid.style.gridTemplateColumns = '1fr';
+                if (revenueChartCard) revenueChartCard.style.display = isRevenueMode ? 'block' : 'none';
+                if (txnChartCard) txnChartCard.style.display = isRevenueMode ? 'none' : 'block';
+                if (transactionListSection) transactionListSection.style.display = isRevenueMode ? 'none' : 'block';
+
+                if (isRevenueMode) {
+                    document.getElementById('monthDetailHeading').innerHTML = `<i class="fa-solid fa-chart-line"></i> ${label} - Monthly Revenue Detail`;
+                    if (transactionLabel) transactionLabel.textContent = label;
+                    if (transactionBody) {
+                        transactionBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:12px;">Click Monthly Transactions to view transaction records.</td></tr>';
+                    }
+                    return;
+                }
+
+                document.getElementById('monthDetailHeading').innerHTML = `<i class="fa-solid fa-receipt"></i> ${label} - Monthly Transaction Detail`;
+                if (monthKey) {
+                    loadMonthTransactionDetails(monthKey, label);
+                } else {
+                    setMonthTransactionPlaceholder(label);
+                }
+            }
+
+            function openFullDetail(idx, mode = 'transactions') {
                 _currentMonthIdx = idx;
                 hideTooltip();
                 const label = monthlySummary.labels[idx];
@@ -1531,13 +1607,16 @@
                 const section = document.getElementById('monthDetailSection');
                 section.style.display = 'block';
                 section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                const isRevenueMode = mode === 'revenue';
+                const revenueChartCard = document.getElementById('mdRevenueChartCard');
+                const txnChartCard = document.getElementById('mdTxnChartCard');
+                const detailChartGrid = document.getElementById('mdDetailChartGrid');
+                if (detailChartGrid) detailChartGrid.style.gridTemplateColumns = '1fr';
+                if (revenueChartCard) revenueChartCard.style.display = isRevenueMode ? 'block' : 'none';
+                if (txnChartCard) txnChartCard.style.display = isRevenueMode ? 'none' : 'block';
                 drawMiniCompareChart('mdRevenueChart', label, revenue, avgRev, '#3e58cf', '$');
                 drawMiniCompareChart('mdTxnChart', label, txn, avgTxn, '#22c55e', '');
-                if (monthKey) {
-                    loadMonthTransactionDetails(monthKey, label);
-                } else {
-                    setMonthTransactionPlaceholder(label);
-                }
+                setMonthDetailMode(mode, label, monthKey);
             }
 
             function setMonthTransactionPlaceholder(label) {

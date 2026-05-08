@@ -9,6 +9,7 @@ app = Flask(__name__, template_folder='Templates',
             static_folder='Templates/static')
 app.secret_key = 'pos-inventory-secret-key-2026'
 db_path = Path(app.root_path) / 'instance' / 'pos_system.db'
+db_path.parent.mkdir(exist_ok=True)
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{db_path.as_posix()}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -1070,6 +1071,8 @@ def init_db():
         db.create_all()
         user_columns = [row[1] for row in db.session.execute(
             db.text('PRAGMA table_info(user)')).fetchall()]
+        transaction_columns = [row[1] for row in db.session.execute(
+            db.text('PRAGMA table_info("transaction")')).fetchall()]
 
         if 'full_name' not in user_columns:
             db.session.execute(db.text(
@@ -1079,6 +1082,11 @@ def init_db():
         if 'is_active' not in user_columns:
             db.session.execute(db.text(
                 'ALTER TABLE user ADD COLUMN is_active BOOLEAN NOT NULL DEFAULT 1'))
+            db.session.commit()
+
+        if 'customer_id' not in transaction_columns:
+            db.session.execute(db.text(
+                'ALTER TABLE "transaction" ADD COLUMN customer_id INTEGER REFERENCES customer(id)'))
             db.session.commit()
 
         # Ensure default users always exist
