@@ -5,8 +5,7 @@ from db import db
 from models import User, Product, Transaction, Customer, ActivityLog
 from auth.decorators import login_required , log_activity , management_required , manager_required
 
-app = Flask(__name__, template_folder='Templates',
-            static_folder='Templates/static')
+app = Flask(__name__)
 app.secret_key = 'pos-inventory-secret-key-2026'
 db_path = Path(app.root_path) / 'instance' / 'pos_system.db'
 db_path.parent.mkdir(exist_ok=True)
